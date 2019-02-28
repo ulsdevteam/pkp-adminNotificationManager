@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * plugins/generic/adminNotificationManager/locale/en_US/locale.xml
+  *
+  * Copyright (c) University of Pittsburgh
+  * Distributed under the GNU GPL v2 or later. For full terms see the LICENSE file.
+  *
+  * Admin Notification Manager plugin localization strings
+  -->
+ 
+<locale name="en_US" full_name="U.S. English">
+
+	<!-- Admin Notification Manager -->
+	<message key="plugins.generic.adminNotificationManager.displayName">Administrator Notification Manager</message>
+	<message key="plugins.generic.adminNotificationManager.disableAllNotifications">Disable Active Notifications</message>
+	<message key="plugins.generic.adminNotificationManager.description"><![CDATA[Enable this plugin to disable email notifications in the settings for newly created journals. This plugin also allows an administrator to disable email notifications for all existing journals.]]></message>
+	<message key="plugins.generic.adminNotificationManager.instructions"><![CDATA[Click OK to disable all email notification settings for all administrative-level users for all journals. Existing settings cannot be recovered after this action, but each user may go to the notification settings of each journal individually and change their notification settings manually.]]></message>
+
+</locale>
