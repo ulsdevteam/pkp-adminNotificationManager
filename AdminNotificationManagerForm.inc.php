@@ -22,9 +22,8 @@ class AdminNotificationManagerForm extends Form {
 	/**
 	 * Constructor
 	 * @param $plugin AdminNotificationManagerPlugin
-	 * @param $contextId int
 	 */
-	function __construct($plugin/*, $contextId*/) {
+	function __construct($plugin) {
 		$this->_plugin = $plugin;
 
 		parent::__construct($plugin->getTemplatePath() . 'adminNotificationForm.tpl');
@@ -44,7 +43,7 @@ class AdminNotificationManagerForm extends Form {
 	}
 
 	/**
-	 * Execute disableAllAdminNotifications().
+	 * Executing the form--hitting "OK"--should call disableAllAdminNotifications().
 	 */
 	function execute() {
 		$this->_plugin->disableAllAdminNotifications();
