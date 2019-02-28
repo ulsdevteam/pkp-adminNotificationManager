@@ -80,15 +80,8 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'disableAllNotifications':
-				$context = $request->getContext();
-
-				AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_MANAGER);
-				$templateMgr = TemplateManager::getManager($request);
-				
-				$templateMgr->register_function('plugin_url', array($this, 'smartyPluginUrl'));
-
 				$this->import('AdminNotificationManagerForm');
-				$form = new AdminNotificationManagerSettingsForm($this, $context->getId());
+				$form = new AdminNotificationManagerForm($this);
 				
 				if ($request->getUserVar('disableNotifications')) {
 					$form->execute();
