@@ -215,7 +215,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @param $userId the ID of a user.
 	 * @return none
 	 */
-function _disableNotificationsByContextAndUser($contextId, $userId) {
+	function _disableNotificationsByContextAndUser($contextId, $userId) {
 		if(!(is_numeric($contextId) && is_numeric($userId))) return;
 		
 		$notificationSubscriptionSettingsDao = DAORegistry::getDAO('NotificationSubscriptionSettingsDAO');
