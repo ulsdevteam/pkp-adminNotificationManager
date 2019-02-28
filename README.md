@@ -9,7 +9,7 @@ This plugin, when installed and enabled, automatically unsubscribes all admin us
 
 ## Installation
 
-Install this as a "generic" plugin in OJS.  The preferred installation method is through the Plugin Gallery. To install manually via the filesystem, extract the contents of this archive to a "clamav" directory under "plugins/generic" in your OJS root.  To install via Git submodule, target that same directory path: `git submodule add https://github.com/ulsdevteam/pkp-clamav plugins/generic/clamav` and `git submodule update --init --recursive plugins/generic/clamav`.  Run the upgrade script to register this plugin, e.g.: `php tools/upgrade.php upgrade`.
+Install this as a "generic" plugin in OJS.  The preferred installation method is through the Plugin Gallery. To install manually via the filesystem, extract the contents of this archive to a "adminNotificationManager" directory under "plugins/generic" in your OJS root.  To install via Git submodule, target that same directory path: `git submodule add https://github.com/ulsdevteam/pkp-adminNotificationManager plugins/generic/adminNotificationManager` and `git submodule update --init --recursive plugins/generic/adminNotificationManager`.  Run the upgrade script to register this plugin, e.g.: `php tools/upgrade.php upgrade`.
 
 ## Configuration
 
