@@ -124,14 +124,14 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	
 	/**
 	 * Private helper method. Returns a map of notifications used. While this is
-	 * based on libPKP's NotificationSettingsForm and OJS's NotificationSettingsForm,
+	 * based on libPKP's PKPNotificationSettingsForm and OJS's NotificationSettingsForm,
 	 * those aren't _exactly_ available for easy reuse.
 	 * 
 	 * @return array
 	 */
 	function _getNotificationSettingsMap() {
 		$notificationMap = array(
-			/* from classes/notification/form/NotificationSettingsForm */
+			/* from lib/pkp/classes/notification/form/PKPNotificationSettingsForm */
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
