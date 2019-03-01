@@ -66,7 +66,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		return array_merge(
 				$this->getEnabled() ? array(
 			new LinkAction(
-					'disableAllNotifications', new AjaxModal(
+					'plugins.generic.adminNotificationManager.disableAllNotificationsTooltip', new AjaxModal(
 					$router->url($request, null, null, 'manage', null, array('verb' => 'disableAllNotifications', 'plugin' => $this->getName(), 'category' => 'generic')), $this->getDisplayName()
 					), __('plugins.generic.adminNotificationManager.disableAllNotifications'), null
 			),
