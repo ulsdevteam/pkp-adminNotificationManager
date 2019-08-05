@@ -20,8 +20,8 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @return boolean True iff plugin initialized successfully; if false,
 	 * 	the plugin will not be registered.
 	 */
-	function register($category, $path) {
-		$success = parent::register($category, $path);
+	function register($category, $path, $mainContextId = null) {
+		$success = parent::register($category, $path, $mainContextId);
 		if (!Config::getVar('general', 'installed') || defined('RUNNING_UPGRADE'))
 			return true;
 		if ($success && $this->getEnabled()) {
