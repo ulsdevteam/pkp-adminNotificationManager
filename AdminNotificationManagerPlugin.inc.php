@@ -130,7 +130,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * @copydoc PKPPlugin::getTemplatePath
+	  * @see PKPPlugin::getTemplatePath()
 	 */
 	function getTemplatePath($inCore = false) {
 		$versionCompare = $this->currentAppVersion->compare("3.1.2");
@@ -176,7 +176,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
-                        /* */
+                        /* newly added from OJS 3.1.2 */
 			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
