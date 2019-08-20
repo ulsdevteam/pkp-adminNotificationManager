@@ -26,7 +26,13 @@ class AdminNotificationManagerForm extends Form {
 	function __construct($plugin) {
 		$this->_plugin = $plugin;
 
-		parent::__construct($plugin->getTemplatePath() . 'adminNotificationForm.tpl');
+		if (method_exists($plugin, 'getTemplateResource')) {
+			// OJS 3.1.2 and later
+			parent::__construct($plugin->getTemplateResource('adminNotificationForm.tpl'));
+		} else {
+			// OJS 3.1.1 and earlier
+			parent::__construct($plugin->getTemplatePath() . 'adminNotificationForm.tpl');
+		}
 
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCSRF($this));

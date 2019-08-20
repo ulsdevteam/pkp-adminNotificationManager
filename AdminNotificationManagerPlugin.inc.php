@@ -14,14 +14,29 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
-	/**
+
+    
+    	/**
+	 * @var $currentOjsVersion object
+	 * 
+	 * This string holds the current version object returned by the VersionDAO
+	 * object. It's built in $this->register() and is used throughout the plugin
+	 * to support backwards compatibility with older versions of OJS.
+	 */
+	public $currentAppVersion = null;
+
+        /**
 	 * Called as a plugin is registered to the registry
 	 * @param $category String Name of category plugin was registered to
 	 * @return boolean True iff plugin initialized successfully; if false,
 	 * 	the plugin will not be registered.
 	 */
-	function register($category, $path, $mainContextId = null) {
-		$success = parent::register($category, $path, $mainContextId);
+	function register($category, $path) {
+		// Setting version information for backwards compatibility in other areas of the plugin
+		$versionDao = DAORegistry::getDAO('VersionDAO');
+		$this->currentAppVersion = $versionDao->getCurrentVersion();
+
+                $success = parent::register($category, $path, $mainContextId);
 		if (!Config::getVar('general', 'installed') || defined('RUNNING_UPGRADE'))
 			return true;
 		if ($success && $this->getEnabled()) {
@@ -33,6 +48,24 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
+	 * Backwards-compatible method to retrieve the current context across
+	 * multiple versions of PKP applicatiosn
+	 * @return 
+	 */
+	function _getBackwardsCompatibleContext() {
+		$versionCompare = $this->currentAppVersion->compare("3.2");
+		if($versionCompare >= 0) {
+			// OJS 3.2 and later
+			$request = Application::get()->getRequest();
+			$context = $request->getContext();
+		} else {
+			// OJS 3.1.2 and earlier
+			$context = Request::getContext();
+		}
+		return $context;
+	}
+
+        /**
 	 * Get the display name of this plugin.
 	 * @return String
 	 */
@@ -97,19 +130,18 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * @see PKPPlugin::getTemplatePath()
+	  * @see PKPPlugin::getTemplatePath()
 	 */
 	function getTemplatePath($inCore = false) {
-		$templatePath = parent::getTemplatePath($inCore);
-		// OJS 3.1.2 and later include the 'templates' directory, but no trailing slash
-		$templateDir = 'templates';
-		if (strlen($templatePath) >= strlen($templateDir)) {
-			if (substr_compare($templatePath, $templateDir, strlen($templatePath) - strlen($templateDir), strlen($templateDir)) === 0) {
-				return $templatePath;
-			}
+		$versionCompare = $this->currentAppVersion->compare("3.1.2");
+
+		if($versionCompare >= 0) {
+			// OJS 3.1.2 and later
+			return parent::getTemplatePath($inCore);
+		} else {
+			// OJS 3.1.1 and earlier 3.x releases
+			return parent::getTemplatePath($inCore) . 'templates' . DIRECTORY_SEPARATOR;
 		}
-		// OJS 3.1.1 and earlier includes a trailing slash to the plugin path
-		return $templatePath . $templateDir . DIRECTORY_SEPARATOR;
 	}
 
 	/**
@@ -144,6 +176,10 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
+                        /* newly added from OJS 3.1.2 */
+			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
+				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
+				'settingKey' => 'notification.type.editorAssignmentTask'),
 			NOTIFICATION_TYPE_METADATA_MODIFIED => array('settingName' => 'notificationMetadataModified',
 				'emailSettingName' => 'emailNotificationMetadataModified',
 				'settingKey' => 'notification.type.metadataModified'),
