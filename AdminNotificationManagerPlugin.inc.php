@@ -31,7 +31,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @return boolean True iff plugin initialized successfully; if false,
 	 * 	the plugin will not be registered.
 	 */
-	function register($category, $path, $mainContextId = null) {
+	function register($category, $path) {
 		// Setting version information for backwards compatibility in other areas of the plugin
 		$versionDao = DAORegistry::getDAO('VersionDAO');
 		$this->currentAppVersion = $versionDao->getCurrentVersion();
@@ -176,6 +176,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
+                        /* */
 			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
