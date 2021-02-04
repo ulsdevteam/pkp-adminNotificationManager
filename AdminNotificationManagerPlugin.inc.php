@@ -26,12 +26,9 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	public $currentAppVersion = null;
 
         /**
-	 * Called as a plugin is registered to the registry
-	 * @param $category String Name of category plugin was registered to
-	 * @return boolean True iff plugin initialized successfully; if false,
-	 * 	the plugin will not be registered.
+	 * @copydoc Plugin::register()
 	 */
-	function register($category, $path) {
+	function register($category, $path, $mainContextId) {
 		// Setting version information for backwards compatibility in other areas of the plugin
 		$versionDao = DAORegistry::getDAO('VersionDAO');
 		$this->currentAppVersion = $versionDao->getCurrentVersion();
