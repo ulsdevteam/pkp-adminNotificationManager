@@ -12,6 +12,8 @@
  * @brief Administrator Notification Manager plugin class
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
+use APP\Services\ContextService;
+use PKP\Services\PKPUserService;     
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
@@ -146,19 +148,33 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @return array
 	 */
 	function _getAdminList() {
-		$user = null;
+		$arrayOfContexts = $this->_getContexts();
 		$users = array();
 
-		$roleDAO = DAORegistry::getDAO('RoleDAO');
-		$userDAO = $roleDAO->getUsersByRoleId(ROLE_ID_SITE_ADMIN);
+		foreach($arrayOfContexts as $context){
+		$user = null;
+		$userId = array();
+		$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
+		$userFactory = new PKPUserService();
+  
+		$userGroupDAOFactory = $userGroupDAO->getByRoleId($context,ROLE_ID_SITE_ADMIN);
 
-		if ($userDAO && $userDAO->getCount() > 0) {
-			while ($user = $userDAO->next()) {
-				$users[$user->getId()] = $user;
+		if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1){
+			while($group = $userGroupDAOFactory->next()){
+				$groupId = $group->getId();
+				$userId[] = $groupId;     
 			}
 		}
-		return $users;
+
+			$args = array('userGroupIds'=>$userId);
+			$listOfUsers= $userFactory->getMany($args);
+			foreach($listOfUsers as $user){
+				$idValue = $user->getId();
+				$users[$idValue] = $user;   
+			}
 	}
+	return $users;
+}
 	
 	/**
 	 * Private helper method. Returns a map of notifications used. While this is
@@ -196,6 +212,9 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
 				'emailSettingName' => 'emailNotificationPublishedIssue',
 				'settingKey' => 'notification.type.issuePublished'),
+			NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
+				'emailSettingName' => 'emailNotificationEditorialReport',
+				'settingKey' => 'notification.type.editorialReport'),
 		);
 		return $notificationMap;
 	}
@@ -207,15 +226,16 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @return array
 	 */
 	function _getContexts() {
-		$contextDao = Application::getContextDAO();
-		$contextIterator = $contextDao->getAvailable();
-		if ($contextIterator && $contextIterator->getCount() > 1) {
-			$contextsById = array();
-			while ($context = $contextIterator->next()) {
-				$contextsById[$context->getId()] = $context->getLocalizedName();
+		$contextIdsObject = new ContextService();
+		$Ids = array();
+		if ($contextIdsObject && $contextIdsObject->getCount() >= 1) {
+			$contextsById = $contextIdsObject->getIds();
+			foreach($contextsById as $context){
+				$arrayValue = $context;
+				$Ids[$arrayValue] = $context;
 			}
 		}
-		return $contextsById;
+		return $Ids;
 	}
 	
 	/**
