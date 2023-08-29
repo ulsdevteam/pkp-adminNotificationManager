@@ -150,25 +150,23 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	function _getAdminList() {
 		$arrayOfContexts = $this->_getContexts();
 		$users = array();
-
-		foreach($arrayOfContexts as $context){
-		$user = null;
 		$userId = array();
-		$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
+		$user = null;
 		$userFactory = new PKPUserService();
-  
+
+		foreach($arrayOfContexts as $context) {
+		$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
 		$userGroupDAOFactory = $userGroupDAO->getByRoleId($context,ROLE_ID_SITE_ADMIN);
 
-		if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1){
-			while($group = $userGroupDAOFactory->next()){
+		if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1) {
+			while($group = $userGroupDAOFactory->next()) {
 				$groupId = $group->getId();
 				$userId[] = $groupId;     
 			}
 		}
-
 			$args = array('userGroupIds'=>$userId);
 			$listOfUsers= $userFactory->getMany($args);
-			foreach($listOfUsers as $user){
+			foreach($listOfUsers as $user) {
 				$idValue = $user->getId();
 				$users[$idValue] = $user;   
 			}
@@ -227,15 +225,14 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 */
 	function _getContexts() {
 		$contextIdsObject = new ContextService();
-		$Ids = array();
+		$ids = array();
 		if ($contextIdsObject && $contextIdsObject->getCount() >= 1) {
 			$contextsById = $contextIdsObject->getIds();
-			foreach($contextsById as $context){
-				$arrayValue = $context;
-				$Ids[$arrayValue] = $context;
+			foreach($contextsById as $context) {
+				$ids[] = $context;
 			}
 		}
-		return $Ids;
+		return $ids;
 	}
 	
 	/**
