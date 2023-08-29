@@ -150,29 +150,29 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	function _getAdminList() {
 		$arrayOfContexts = $this->_getContexts();
 		$users = array();
-		$userId = array();
+		$userGroupId = array();
 		$user = null;
 		$userFactory = new PKPUserService();
 
-		foreach($arrayOfContexts as $context) {
-		$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
-		$userGroupDAOFactory = $userGroupDAO->getByRoleId($context,ROLE_ID_SITE_ADMIN);
+		foreach ($arrayOfContexts as $context) {
+			$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
+			$userGroupDAOFactory = $userGroupDAO->getByRoleId($context, ROLE_ID_SITE_ADMIN);
 
-		if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1) {
-			while($group = $userGroupDAOFactory->next()) {
-				$groupId = $group->getId();
-				$userId[] = $groupId;     
+			if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1) {
+				while($group = $userGroupDAOFactory->next()) {
+					$groupId = $group->getId();
+					$userGroupId[] = $groupId;     
+				}
 			}
-		}
-			$args = array('userGroupIds'=>$userId);
+			$args = array('userGroupIds'=>$userGroupId);
 			$listOfUsers= $userFactory->getMany($args);
-			foreach($listOfUsers as $user) {
+			foreach ($listOfUsers as $user) {
 				$idValue = $user->getId();
 				$users[$idValue] = $user;   
 			}
+		}
+		return $users;
 	}
-	return $users;
-}
 	
 	/**
 	 * Private helper method. Returns a map of notifications used. While this is
@@ -226,11 +226,9 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	function _getContexts() {
 		$contextIdsObject = new ContextService();
 		$ids = array();
-		if ($contextIdsObject && $contextIdsObject->getCount() >= 1) {
-			$contextsById = $contextIdsObject->getIds();
-			foreach($contextsById as $context) {
-				$ids[] = $context;
-			}
+		$contextsById = $contextIdsObject->getIds();
+		foreach ($contextsById as $context) {
+			$ids[] = $context;
 		}
 		return $ids;
 	}
