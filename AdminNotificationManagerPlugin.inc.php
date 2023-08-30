@@ -18,8 +18,8 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		/**
 	 * @copydoc Plugin::register()
 	 */
-	function register($category, $path, $mainContextId) {
-		$success = parent::register($category, $path, $mainContextId);
+	public function register($category, $path, $mainContextId = null) {
+    $success = parent::register($category, $path, $mainContextId);
 		if (!Config::getVar('general', 'installed') || defined('RUNNING_UPGRADE'))
 			return true;
 		if ($success && $this->getEnabled()) {
