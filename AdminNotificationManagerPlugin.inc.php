@@ -218,19 +218,15 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Private helper method. Opens up a context DAO and iterates over the contexts,
-	 * returning an array with index "context ID" and value "context name".
+	 * Private helper method. Creates a new context service object and gets their ids, which are 
+	 * placed in a simple array. 
 	 * 
 	 * @return array
 	 */
 	function _getContexts() {
 		$contextIdsObject = new ContextService();
-		$ids = array();
 		$contextsById = $contextIdsObject->getIds();
-		foreach ($contextsById as $context) {
-			$ids[] = $context;
-		}
-		return $ids;
+		return $contextsById;
 	}
 	
 	/**
@@ -242,7 +238,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 */
 	function disableAllAdminNotifications() {
 		$contexts = $this->_getContexts();
-		foreach($contexts as $context=>$contextName) {
+		foreach($contexts as $context) {
 			$this->_disableAdminNotificationsByContext($context);
 		}
 		return;
