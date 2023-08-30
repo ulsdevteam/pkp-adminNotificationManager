@@ -15,15 +15,6 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
-    
-    	/**
-	 * @var $currentOjsVersion object
-	 * 
-	 * This string holds the current version object returned by the VersionDAO
-	 * object. It's built in $this->register() and is used throughout the plugin
-	 * to support backwards compatibility with older versions of OJS.
-	 */	
-
         /**
 	 * @copydoc Plugin::register()
 	 */
