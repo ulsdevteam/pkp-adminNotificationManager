@@ -15,7 +15,7 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
-        /**
+		/**
 	 * @copydoc Plugin::register()
 	 */
 	function register($category, $path, $mainContextId) {
@@ -30,7 +30,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		return $success;
 	}
 
-        /**
+		/**
 	 * Get the display name of this plugin.
 	 * @return String
 	 */
@@ -126,7 +126,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
-                        /* newly added from OJS 3.1.2 */
+						/* newly added from OJS 3.1.2 */
 			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
