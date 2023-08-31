@@ -1,10 +1,10 @@
 # Administrator Notification Manager plugin for OJS
 
-This plugin, when installed and enabled, automatically unsubscribes all admin users from notifications sent by a journal when that journal is first created. It also allows you to unsubscribe all admin users from all email notifications sent by all journals.
+This plugin changes the notification settings for all admin users, so they no longer recieve any email notifications from a journal after its creation. This plugin disables every type of email notifications for a journal when used, and must be used for each journal on the site. 
 
 ## Requirements
 
-* OJS 3.1.x
+* OJS 3.3.x
 * PHP 5.3 or later
 
 ## Installation
@@ -13,14 +13,20 @@ Install this as a "generic" plugin in OJS.  The preferred installation method is
 
 ## Configuration
 
-You must be the site administrator in order to enable or configure this plugin.  Enabling this plugin enables the automatic unsubscription feature. To disable this feature, disable the plugin.
+This plugin is automatically enabled upon proper installation. The plugin will also be automatically enabled for the creation of each new journal is created on the site. 
 
 ## Usage
 
-This plugin does not require any further configuration in order to function. However, if you view the plugin in the plugin list, you can access the Disable Active Notifications feature. Click on the link, read the disclaimer, and click "OK" to disable all email notifications for all admin users from all journals.
+ Usage of this plugin can be accomplished one of two ways:
+
+  1) After creating a new journal, click the administration button on the left (if you don't see this button click the list of journals in the top left corner and select one). From there click hosted journals, select your new journal, and click settings wizard. Make any desired changes here and hit save on the bottom right.
+
+  2) After creating a new journal, select it from the menu in the top left. Click website and navigate to the plugins tab. Scroll down in this page until you see this plugin listed under the generic plugins. Click the button to disable active notifications and hit okay on the pop-up.
+
+From here navigate back to your profile in the top right, hit edit profile, and go to the notifications tab. If properly enabled all checkboxes for not recieving email notifications should be checked. You can also manually configure any notifications you may want to see for a particular journal.
 
 ## Author / License
 
-Written by Alex Wreschnig for the [University of Pittsburgh](http://www.pitt.edu).  Copyright (c) University of Pittsburgh.
+Written by Alex Wreschnig and Tazio Polanco for the [University of Pittsburgh](http://www.pitt.edu).  Copyright (c) University of Pittsburgh.
 
 Released under a license of GPL v2 or later.
