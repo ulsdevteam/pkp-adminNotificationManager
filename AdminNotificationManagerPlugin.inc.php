@@ -15,25 +15,11 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
-    
-    	/**
-	 * @var $currentOjsVersion object
-	 * 
-	 * This string holds the current version object returned by the VersionDAO
-	 * object. It's built in $this->register() and is used throughout the plugin
-	 * to support backwards compatibility with older versions of OJS.
-	 */
-	public $currentAppVersion = null;
-
         /**
 	 * @copydoc Plugin::register()
 	 */
 	public function register($category, $path, $mainContextId = null) {
-		// Setting version information for backwards compatibility in other areas of the plugin
-		$versionDao = DAORegistry::getDAO('VersionDAO');
-		$this->currentAppVersion = $versionDao->getCurrentVersion();
-
-                $success = parent::register($category, $path, $mainContextId);
+    $success = parent::register($category, $path, $mainContextId);
 		if (!Config::getVar('general', 'installed') || defined('RUNNING_UPGRADE'))
 			return true;
 		if ($success && $this->getEnabled()) {
@@ -42,24 +28,6 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			HookRegistry::register('JournalSiteSettingsForm::execute', array($this, 'disableNewAdminNotifications'));
 		}
 		return $success;
-	}
-
-	/**
-	 * Backwards-compatible method to retrieve the current context across
-	 * multiple versions of PKP applicatiosn
-	 * @return 
-	 */
-	function _getBackwardsCompatibleContext() {
-		$versionCompare = $this->currentAppVersion->compare("3.2");
-		if($versionCompare >= 0) {
-			// OJS 3.2 and later
-			$request = Application::get()->getRequest();
-			$context = $request->getContext();
-		} else {
-			// OJS 3.1.2 and earlier
-			$context = Request::getContext();
-		}
-		return $context;
 	}
 
         /**
@@ -124,21 +92,6 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 				return false;
 		}
 		return parent::manage($args, $request);
-	}
-
-	/**
-	  * @see PKPPlugin::getTemplatePath()
-	 */
-	function getTemplatePath($inCore = false) {
-		$versionCompare = $this->currentAppVersion->compare("3.1.2");
-
-		if($versionCompare >= 0) {
-			// OJS 3.1.2 and later
-			return parent::getTemplatePath($inCore);
-		} else {
-			// OJS 3.1.1 and earlier 3.x releases
-			return parent::getTemplatePath($inCore) . 'templates' . DIRECTORY_SEPARATOR;
-		}
 	}
 
 	/**
