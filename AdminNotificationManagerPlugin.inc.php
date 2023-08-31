@@ -13,15 +13,15 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 use APP\Services\ContextService;
-use PKP\Services\PKPUserService;     
+use PKP\Services\PKPUserService;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
-        /**
+	/**
 	 * @copydoc Plugin::register()
 	 */
 	public function register($category, $path, $mainContextId = null) {
-    $success = parent::register($category, $path, $mainContextId);
+		$success = parent::register($category, $path, $mainContextId);
 		if (!Config::getVar('general', 'installed') || defined('RUNNING_UPGRADE'))
 			return true;
 		if ($success && $this->getEnabled()) {
@@ -32,7 +32,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		return $success;
 	}
 
-        /**
+	/**
 	 * Get the display name of this plugin.
 	 * @return String
 	 */
@@ -87,7 +87,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 					$form->execute();
 					return new JSONMessage(true);
 				}
- 				return new JSONMessage(true, $form->fetch($request));
+				return new JSONMessage(true, $form->fetch($request));
 
 			default:
 				assert(false);
@@ -140,7 +140,6 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
-                        /* newly added from OJS 3.1.2 */
 			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
