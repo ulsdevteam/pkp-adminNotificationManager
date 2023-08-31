@@ -17,7 +17,7 @@ use PKP\Services\PKPUserService;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
-		/**
+	/**
 	 * @copydoc Plugin::register()
 	 */
 	public function register($category, $path, $mainContextId = null) {
@@ -32,7 +32,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		return $success;
 	}
 
-		/**
+	/**
 	 * Get the display name of this plugin.
 	 * @return String
 	 */
