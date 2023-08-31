@@ -12,6 +12,8 @@
  * @brief Administrator Notification Manager plugin class
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
+use APP\Services\ContextService;
+use PKP\Services\PKPUserService;     
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
@@ -99,15 +101,27 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @return array
 	 */
 	function _getAdminList() {
-		$user = null;
+		$arrayOfContexts = $this->_getContexts();
 		$users = array();
+		$userGroupId = array();
+		$user = null;
+		$userFactory = new PKPUserService();
 
-		$roleDAO = DAORegistry::getDAO('RoleDAO');
-		$userDAO = $roleDAO->getUsersByRoleId(ROLE_ID_SITE_ADMIN);
+		foreach ($arrayOfContexts as $context) {
+			$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
+			$userGroupDAOFactory = $userGroupDAO->getByRoleId($context, ROLE_ID_SITE_ADMIN);
 
-		if ($userDAO && $userDAO->getCount() > 0) {
-			while ($user = $userDAO->next()) {
-				$users[$user->getId()] = $user;
+			if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1) {
+				while($group = $userGroupDAOFactory->next()) {
+					$groupId = $group->getId();
+					$userGroupId[] = $groupId;     
+				}
+			}
+			$args = array('userGroupIds'=>$userGroupId);
+			$listOfUsers= $userFactory->getMany($args);
+			foreach ($listOfUsers as $user) {
+				$idValue = $user->getId();
+				$users[$idValue] = $user;   
 			}
 		}
 		return $users;
@@ -149,25 +163,22 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 			NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
 				'emailSettingName' => 'emailNotificationPublishedIssue',
 				'settingKey' => 'notification.type.issuePublished'),
+			NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
+				'emailSettingName' => 'emailNotificationEditorialReport',
+				'settingKey' => 'notification.type.editorialReport'),
 		);
 		return $notificationMap;
 	}
 
 	/**
-	 * Private helper method. Opens up a context DAO and iterates over the contexts,
-	 * returning an array with index "context ID" and value "context name".
+	 * Private helper method. Creates a new context service object and gets their ids, which are 
+	 * placed in a simple array. 
 	 * 
 	 * @return array
 	 */
 	function _getContexts() {
-		$contextDao = Application::getContextDAO();
-		$contextIterator = $contextDao->getAvailable();
-		if ($contextIterator && $contextIterator->getCount() > 1) {
-			$contextsById = array();
-			while ($context = $contextIterator->next()) {
-				$contextsById[$context->getId()] = $context->getLocalizedName();
-			}
-		}
+		$contextIdsObject = new ContextService();
+		$contextsById = $contextIdsObject->getIds();
 		return $contextsById;
 	}
 	
@@ -180,7 +191,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 */
 	function disableAllAdminNotifications() {
 		$contexts = $this->_getContexts();
-		foreach($contexts as $context=>$contextName) {
+		foreach($contexts as $context) {
 			$this->_disableAdminNotificationsByContext($context);
 		}
 		return;
