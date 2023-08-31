@@ -13,7 +13,7 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 use APP\Services\ContextService;
-use PKP\Services\PKPUserService;     
+use PKP\Services\PKPUserService;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
