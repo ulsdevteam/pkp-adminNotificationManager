@@ -33,34 +33,30 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Get the display name of this plugin.
-	 * @return String
+	 * @copydoc Plugin::getDisplayName
 	 */
-	function getDisplayName() {
+	public function getDisplayName() {
 		return __('plugins.generic.adminNotificationManager.displayName');
 	}
 
 	/**
-	 * Get a description of the plugin.
-	 * @return String
+	 * @copydoc Plugin::getDescription
 	 */
-	function getDescription() {
+	public function getDescription() {
 		return __('plugins.generic.adminNotificationManager.description');
 	}
 
 	/**
-	 * Site-wide plugins should override this function to return true.
-	 *
-	 * @return boolean
+	 * @copydoc Plugin::isSitePlugin
 	 */
-	function isSitePlugin() {
+	public function isSitePlugin() {
 		return true;
 	}
 
 	/**
 	 * @copydoc Plugin::getActions()
 	 */
-	function getActions($request, $verb) {
+	public function getActions($request, $verb) {
 		$router = $request->getRouter();
 		import('lib.pkp.classes.linkAction.request.AjaxModal');
 		return array_merge(
@@ -77,7 +73,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	/**
 	 * @copydoc Plugin::manage()
 	 */
-	function manage($args, $request) {
+	public function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'disableAllNotifications':
 				$this->import('AdminNotificationManagerForm');
@@ -97,10 +93,12 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Private helper method to get a list of all admin users.
+	 * Private helper method to get an array that lists group
+	 * context ids of all admin users.
+	 * 
 	 * @return array
 	 */
-	function _getAdminList() {
+	private function _getAdminList() {
 		$arrayOfContexts = $this->_getContexts();
 		$users = array();
 		$userGroupId = array();
@@ -134,7 +132,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * 
 	 * @return array
 	 */
-	function _getNotificationSettingsMap() {
+	private function _getNotificationSettingsMap() {
 		$notificationMap = array(
 			/* from lib/pkp/classes/notification/form/PKPNotificationSettingsForm */
 			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
@@ -170,12 +168,12 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Private helper method. Creates a new context service object and gets their ids, which are 
-	 * placed in a simple array. 
+	 * Private helper method. Creates a new context service object and lists contexts
+	 * by their ids, which are placed in a array to be returned. 
 	 * 
 	 * @return array
 	 */
-	function _getContexts() {
+	private function _getContexts() {
 		$contextIdsObject = new ContextService();
 		$contextsById = $contextIdsObject->getIds();
 		return $contextsById;
@@ -188,7 +186,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * 
 	 * @return none
 	 */
-	function disableAllAdminNotifications() {
+	public function disableAllAdminNotifications() {
 		$contexts = $this->_getContexts();
 		foreach($contexts as $context) {
 			$this->_disableAdminNotificationsByContext($context);
@@ -204,7 +202,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @param $contextId the ID of a context.
 	 * @return none
 	 */
-	function _disableAdminNotificationsByContext($contextId) {
+	private function _disableAdminNotificationsByContext($contextId) {
 		$admins = $this->_getAdminList();
 		foreach($admins as $userId=>$admin) {
 			$this->_disableNotificationsByContextAndUser($contextId, $userId);
@@ -220,7 +218,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * @param $userId the ID of a user.
 	 * @return none
 	 */
-	function _disableNotificationsByContextAndUser($contextId, $userId) {
+	private function _disableNotificationsByContextAndUser($contextId, $userId) {
 		if(!(is_numeric($contextId) && is_numeric($userId))) return;
 		
 		$notificationSubscriptionSettingsDao = DAORegistry::getDAO('NotificationSubscriptionSettingsDAO');
@@ -239,8 +237,9 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 * 
 	 * @param $hookName string
 	 * @param $args array
+	 * @return boolean
 	 */
-	function disableNewAdminNotifications($hookName, $args) {
+	public function disableNewAdminNotifications($hookName, $args) {
 		$newContextId = $args[1]->getData("id");
 		$this->_disableAdminNotificationsByContext($newContextId);
 		// returning false allows processing to continue
