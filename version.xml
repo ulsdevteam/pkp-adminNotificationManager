@@ -2,9 +2,9 @@
 <!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
 
 <!--
-  * plugins/generic/clamav/version.xml
+  * plugins/generic/adminNotificationManager/version.xml
   *
-  * Copyright (c) 2018 University of Pittsburgh
+  * Copyright (c) 2023 University of Pittsburgh
   * Distributed under the GNU GPL v2 or later. For full terms see the LICENSE file.
   *
   * Plugin version information.
@@ -12,8 +12,8 @@
 <version>
 	<application>adminNotificationManager</application>
 	<type>plugins.generic</type>
-	<release>1.1.0.0</release>
-	<date>2019-08-20</date>
+	<release>1.2.0.0</release>
+	<date>2023-09-05</date>
 	<lazy-load>1</lazy-load>
 	<class>AdminNotificationManager</class>
 	<sitewide>1</sitewide>
