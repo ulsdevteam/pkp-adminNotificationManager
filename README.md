@@ -1,6 +1,6 @@
 # Administrator Notification Manager plugin for OJS
 
-This plugin disables email notification for all admin users, so they no longer recieve any email notifications from a journal after its creation.  This is useful, for example, if the administrator account(s) are not responsible for editorial actions.
+This plugin disables email notification for all admin users, so they no longer receive any email notifications from a journal after its creation.  This is useful, for example, if the administrator account(s) are not responsible for editorial actions.
 
 ## Requirements
 
