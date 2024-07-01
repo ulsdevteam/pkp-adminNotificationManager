@@ -11,9 +11,22 @@
  *
  * @brief Administrator Notification Manager plugin class
  */
-import('lib.pkp.classes.plugins.GenericPlugin');
-use APP\Services\ContextService;
-use PKP\Services\PKPUserService;
+namespace APP\plugins\generic\adminNotificationManager;
+//import('lib.pkp.classes.plugins.GenericPlugin');
+use APP\services\ContextService;
+use APP\plugins\generic\adminNotificationForm as adminNotificationForm;
+use APP\facades\Repo;
+//use APP\user\Repository as userRepository;
+use APP\userGroup\Repository as userGroupRepository;
+use PKP\security\Role;
+use PKP\db\DAORegistry;
+use PKP\config\Config;
+use PKP\plugins\Hook;
+use PKP\core\JSONMessage;
+use PKP\linkAction\LinkAction;
+use PKP\linkAction\request\AjaxModal;
+use PKP\plugins\GenericPlugin;
+//use PKP\services\PKPUserService;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
@@ -27,7 +40,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		if ($success && $this->getEnabled()) {
 			// Registers against a hook from controllers/grid/admin/journal/form/JournalSiteSettingsForm.inc.php .
 			// This hook should be triggered upon submission of a form to create or edit a new journal.
-			HookRegistry::register('JournalSiteSettingsForm::execute', array($this, 'disableNewAdminNotifications'));
+			Hook::add('JournalSiteSettingsForm::execute', array($this, 'disableNewAdminNotifications'));
 		}
 		return $success;
 	}
@@ -76,7 +89,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	public function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'disableAllNotifications':
-				$this->import('AdminNotificationManagerForm');
+				//$this->import('AdminNotificationManagerForm');
 				$form = new AdminNotificationManagerForm($this);
 				
 				if ($request->getUserVar('disableNotifications')) {
@@ -103,23 +116,31 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		$users = array();
 		$userGroupId = array();
 		$user = null;
-		$userFactory = new PKPUserService();
+		//$userFactory = new PKPUserService();
+		$userRepo = Repo::user();
 
 		foreach ($arrayOfContexts as $context) {
-			$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
-			$userGroupDAOFactory = $userGroupDAO->getByRoleId($context, ROLE_ID_SITE_ADMIN);
+			//getByRoleIds(array $roleIds, int $contextId, ?bool $default = null)
+			//$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
+			//$userGroupDAOFactory = $userGroupDAO->getByRoleId($context, ROLE_ID_SITE_ADMIN);
+			// $userGroupRepo = Repo::userGroup();
+			// $userGroups = $userGroupRepo->getByRoleIds([Role::ROLE_ID_SITE_ADMIN], $context);
+			// $userGroupsArray = $userGroups->toArray();
 
-			if ($userGroupDAOFactory && $userGroupDAOFactory->getCount() >= 1) {
-				while($group = $userGroupDAOFactory->next()) {
-					$groupId = $group->getId();
-					$userGroupId[] = $groupId;     
-				}
-			}
-			$args = array('userGroupIds'=>$userGroupId);
-			$listOfUsers= $userFactory->getMany($args);
+			// if (count($userGroupsArray) >= 1) {
+			// 	foreach($userGroupsArray as $group) {
+			// 		$groupId = $group->getId();
+			// 		$userGroupId[] = $groupId;
+			// 	}
+			// }
+			// $args = array('userGroupIds'=>$userGroupId);
+			//$listOfUsers = $userFactory->getMany($args);
+			$listOfUsers = $userRepo->getCollector()
+			->filterByRoleIds([Role::ROLE_ID_SITE_ADMIN]) //need to check filterBySettings and find a replacement
+			->getMany();
 			foreach ($listOfUsers as $user) {
 				$idValue = $user->getId();
-				$users[$idValue] = $user;   
+				$users[$idValue] = $user;
 			}
 		}
 		return $users;
@@ -135,34 +156,37 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	private function _getNotificationSettingsMap() {
 		$notificationMap = array(
 			/* from lib/pkp/classes/notification/form/PKPNotificationSettingsForm */
-			NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
-			NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
-			NOTIFICATION_TYPE_METADATA_MODIFIED => array('settingName' => 'notificationMetadataModified',
-				'emailSettingName' => 'emailNotificationMetadataModified',
-				'settingKey' => 'notification.type.metadataModified'),
-			NOTIFICATION_TYPE_REVIEWER_COMMENT => array('settingName' => 'notificationReviewerComment',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_REVIEWER_COMMENT => array('settingName' => 'notificationReviewerComment',
 				'emailSettingName' => 'emailNotificationReviewerComment',
 				'settingKey' => 'notification.type.reviewerComment'),
-			NOTIFICATION_TYPE_NEW_QUERY => array('settingName' => 'notificationNewQuery',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_NEW_QUERY => array('settingName' => 'notificationNewQuery',
 				'emailSettingName' => 'emailNotificationNewQuery',
 				'settingKey' => 'notification.type.queryAdded'),
-			NOTIFICATION_TYPE_QUERY_ACTIVITY => array('settingName' => 'notificationQueryActivity',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_QUERY_ACTIVITY => array('settingName' => 'notificationQueryActivity',
 				'emailSettingName' => 'emailNotificationQueryActivity',
 				'settingKey' => 'notification.type.queryActivity'),
-			NOTIFICATION_TYPE_NEW_ANNOUNCEMENT => array('settingName' => 'notificationNewAnnouncement',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_NEW_ANNOUNCEMENT => array('settingName' => 'notificationNewAnnouncement',
 				'emailSettingName' => 'emailNotificationNewAnnouncement',
 				'settingKey' => 'notification.type.newAnnouncement'),
 			/* from classes/notification/form/NotificationSettingsForm */
-			NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
+			\APP\notification\Notification::NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
 				'emailSettingName' => 'emailNotificationPublishedIssue',
 				'settingKey' => 'notification.type.issuePublished'),
-			NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
 				'emailSettingName' => 'emailNotificationEditorialReport',
 				'settingKey' => 'notification.type.editorialReport'),
+			\APP\notification\Notification::NOTIFICATION_TYPE_OPEN_ACCESS => array('settingName' => 'notificationOpenAccess',
+				'emailSettingName' => 'emailNotificationOpenAccess',
+				'settingKey' => 'notification.type.openAccess'),
+			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REMINDER => ['settingName' => 'notificationEditorialReminder',
+				'emailSettingName' => 'emailNotificationEditorialReminder',
+				'settingKey' => 'notification.type.editorialReminder'],
 		);
 		return $notificationMap;
 	}
