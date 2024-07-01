@@ -13,7 +13,7 @@
  * from all journals, and displays a disclaimer prior to the user hitting "OK."
  */
 namespace APP\plugins\generic\adminNotificationManager;
-//import('lib.pkp.classes.form.Form');
+
 use PKP\form\Form;
 use PKP\form\validation\FormValidatorCSRF;
 use PKP\form\validation\FormValidatorPost;
@@ -39,7 +39,6 @@ class AdminNotificationManagerForm extends Form {
 	 * Fetch the form.
 	 * @copydoc Form::fetch()
 	 */ 
-	//fetch($request, $template = null, $display = false)
 	function fetch($request, $template = null, $display = false) {
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign('pluginName', $this->_plugin->getName());

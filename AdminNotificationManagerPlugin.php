@@ -12,11 +12,10 @@
  * @brief Administrator Notification Manager plugin class
  */
 namespace APP\plugins\generic\adminNotificationManager;
-//import('lib.pkp.classes.plugins.GenericPlugin');
+
 use APP\services\ContextService;
 use APP\plugins\generic\adminNotificationForm as adminNotificationForm;
 use APP\facades\Repo;
-//use APP\user\Repository as userRepository;
 use APP\userGroup\Repository as userGroupRepository;
 use PKP\security\Role;
 use PKP\db\DAORegistry;
@@ -26,7 +25,6 @@ use PKP\core\JSONMessage;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
 use PKP\plugins\GenericPlugin;
-//use PKP\services\PKPUserService;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
 
@@ -71,7 +69,6 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	 */
 	public function getActions($request, $verb) {
 		$router = $request->getRouter();
-		import('lib.pkp.classes.linkAction.request.AjaxModal');
 		return array_merge(
 				$this->getEnabled() ? array(
 			new LinkAction(
@@ -89,7 +86,6 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	public function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'disableAllNotifications':
-				//$this->import('AdminNotificationManagerForm');
 				$form = new AdminNotificationManagerForm($this);
 				
 				if ($request->getUserVar('disableNotifications')) {
@@ -114,29 +110,12 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	private function _getAdminList() {
 		$arrayOfContexts = $this->_getContexts();
 		$users = array();
-		$userGroupId = array();
 		$user = null;
-		//$userFactory = new PKPUserService();
 		$userRepo = Repo::user();
 
 		foreach ($arrayOfContexts as $context) {
-			//getByRoleIds(array $roleIds, int $contextId, ?bool $default = null)
-			//$userGroupDAO = DAORegistry::getDAO('UserGroupDAO');
-			//$userGroupDAOFactory = $userGroupDAO->getByRoleId($context, ROLE_ID_SITE_ADMIN);
-			// $userGroupRepo = Repo::userGroup();
-			// $userGroups = $userGroupRepo->getByRoleIds([Role::ROLE_ID_SITE_ADMIN], $context);
-			// $userGroupsArray = $userGroups->toArray();
-
-			// if (count($userGroupsArray) >= 1) {
-			// 	foreach($userGroupsArray as $group) {
-			// 		$groupId = $group->getId();
-			// 		$userGroupId[] = $groupId;
-			// 	}
-			// }
-			// $args = array('userGroupIds'=>$userGroupId);
-			//$listOfUsers = $userFactory->getMany($args);
 			$listOfUsers = $userRepo->getCollector()
-			->filterByRoleIds([Role::ROLE_ID_SITE_ADMIN]) //need to check filterBySettings and find a replacement
+			->filterByRoleIds([Role::ROLE_ID_SITE_ADMIN])
 			->getMany();
 			foreach ($listOfUsers as $user) {
 				$idValue = $user->getId();
