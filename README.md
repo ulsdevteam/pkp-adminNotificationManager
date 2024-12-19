@@ -4,8 +4,8 @@ This plugin disables email notification for all admin users, so they no longer r
 
 ## Requirements
 
-* OJS 3.3.x
-* PHP 5.3 or later
+* OJS 3.4.x
+* PHP 8 or later
 
 ## Installation
 
