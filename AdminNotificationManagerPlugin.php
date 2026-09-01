@@ -16,6 +16,7 @@ namespace APP\plugins\generic\adminNotificationManager;
 use APP\services\ContextService;
 use APP\plugins\generic\adminNotificationForm as adminNotificationForm;
 use APP\facades\Repo;
+use APP\notification\Notification as APPNotification;
 use APP\userGroup\Repository as userGroupRepository;
 use PKP\security\Role;
 use PKP\db\DAORegistry;
@@ -24,6 +25,7 @@ use PKP\plugins\Hook;
 use PKP\core\JSONMessage;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
+use PKP\notification\Notification as PKPNotification;
 use PKP\plugins\GenericPlugin;
 
 class AdminNotificationManagerPlugin extends GenericPlugin {
@@ -38,7 +40,7 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 		if ($success && $this->getEnabled()) {
 			// Registers against a hook from controllers/grid/admin/journal/form/JournalSiteSettingsForm.inc.php .
 			// This hook should be triggered upon submission of a form to create or edit a new journal.
-			Hook::add('JournalSiteSettingsForm::execute', array($this, 'disableNewAdminNotifications'));
+			Hook::add('Context::edit', array($this, 'disableNewAdminNotifications'));
 		}
 		return $success;
 	}
@@ -135,35 +137,35 @@ class AdminNotificationManagerPlugin extends GenericPlugin {
 	private function _getNotificationSettingsMap() {
 		$notificationMap = array(
 			/* from lib/pkp/classes/notification/form/PKPNotificationSettingsForm */
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
+			PKPNotification::NOTIFICATION_TYPE_SUBMISSION_SUBMITTED => array('settingName' => 'notificationSubmissionSubmitted',
 				'emailSettingName' => 'emailNotificationSubmissionSubmitted',
 				'settingKey' => 'notification.type.submissionSubmitted'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
+			PKPNotification::NOTIFICATION_TYPE_EDITOR_ASSIGNMENT_REQUIRED => array('settingName' => 'notificationEditorAssignmentRequired',
 				'emailSettingName' => 'emailNotificationEditorAssignmentRequired',
 				'settingKey' => 'notification.type.editorAssignmentTask'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_REVIEWER_COMMENT => array('settingName' => 'notificationReviewerComment',
+			PKPNotification::NOTIFICATION_TYPE_REVIEWER_COMMENT => array('settingName' => 'notificationReviewerComment',
 				'emailSettingName' => 'emailNotificationReviewerComment',
 				'settingKey' => 'notification.type.reviewerComment'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_NEW_QUERY => array('settingName' => 'notificationNewQuery',
+			PKPNotification::NOTIFICATION_TYPE_NEW_QUERY => array('settingName' => 'notificationNewQuery',
 				'emailSettingName' => 'emailNotificationNewQuery',
 				'settingKey' => 'notification.type.queryAdded'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_QUERY_ACTIVITY => array('settingName' => 'notificationQueryActivity',
+			PKPNotification::NOTIFICATION_TYPE_QUERY_ACTIVITY => array('settingName' => 'notificationQueryActivity',
 				'emailSettingName' => 'emailNotificationQueryActivity',
 				'settingKey' => 'notification.type.queryActivity'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_NEW_ANNOUNCEMENT => array('settingName' => 'notificationNewAnnouncement',
+			PKPNotification::NOTIFICATION_TYPE_NEW_ANNOUNCEMENT => array('settingName' => 'notificationNewAnnouncement',
 				'emailSettingName' => 'emailNotificationNewAnnouncement',
 				'settingKey' => 'notification.type.newAnnouncement'),
 			/* from classes/notification/form/NotificationSettingsForm */
-			\APP\notification\Notification::NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
+			APPNotification::NOTIFICATION_TYPE_PUBLISHED_ISSUE => array('settingName' => 'notificationPublishedIssue',
 				'emailSettingName' => 'emailNotificationPublishedIssue',
 				'settingKey' => 'notification.type.issuePublished'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
+			PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REPORT => array('settingName' => 'notificationEditorialReport',
 				'emailSettingName' => 'emailNotificationEditorialReport',
 				'settingKey' => 'notification.type.editorialReport'),
-			\APP\notification\Notification::NOTIFICATION_TYPE_OPEN_ACCESS => array('settingName' => 'notificationOpenAccess',
+			APPNotification::NOTIFICATION_TYPE_OPEN_ACCESS => array('settingName' => 'notificationOpenAccess',
 				'emailSettingName' => 'emailNotificationOpenAccess',
 				'settingKey' => 'notification.type.openAccess'),
-			\PKP\notification\PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REMINDER => ['settingName' => 'notificationEditorialReminder',
+			PKPNotification::NOTIFICATION_TYPE_EDITORIAL_REMINDER => ['settingName' => 'notificationEditorialReminder',
 				'emailSettingName' => 'emailNotificationEditorialReminder',
 				'settingKey' => 'notification.type.editorialReminder'],
 		);
